@@ -9,7 +9,6 @@ from gi.repository import Handy as hdy
 # recognition
 import speech_recognition as sr
 
-
 hdy.init()
 gtk_settings=Gtk.Settings.get_default ()
 gtk_settings.props.gtk_application_prefer_dark_theme=True
@@ -49,6 +48,9 @@ header=hdy.HeaderBar(show_close_button=True)
 button=Gtk.Button(label="Escucha")
 button.connect("clicked",activa_reconocimiento)
 label= Gtk.Label("Active el reconocimiento")
+imagen=Gtk.Image()
+imagen.set_from_file('./eurus.jpeg')
+imagen.set_pixel_size(10)
 label.set_line_wrap(True)
 label.set_max_width_chars(30)
 label.set_margin_bottom(20)
@@ -62,6 +64,7 @@ header_context.add_class(Gtk.STYLE_CLASS_FLAT)
 
 grid.add(header)
 grid.add(first_row)
+grid.add(imagen)
 
 win.add(grid)
 
