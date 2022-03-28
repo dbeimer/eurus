@@ -1,4 +1,8 @@
 import gi
+import threading
+from apis import festival
+
+# from pocketsphinx import AudioFile,get_model_path
 
 gi.require_version("Gtk","3.0")
 gi.require_version("Handy","1")
@@ -33,20 +37,31 @@ recog=sr.Recognizer()
 # print(sr.Microphone.list_microphone_names())
 
 
-def activa_reconocimiento(button):
+
+def click_btn_reconocimiento(button):
+    t1=threading.Thread(target=google_recognition)
+    t1.start()
+
+def google_recognition():
     with mic as audio_file:
 
         label.set_text("Escuchando ...")
         recog.adjust_for_ambient_noise(audio_file)
         audio = recog.listen(audio_file)
-
-        # print("Converting Speech to Text...")
         reconocio= recog.recognize_google(audio,language='es-PE')
+        label.set_text(reconocio)
+
+def pocket_sphinx_recognition():
+    with mic as audio_file:
+        label.set_text("Escuchando ...")
+        recog.adjust_for_ambient_noise(audio_file)
+        audio = recog.listen(audio_file)
+        reconocio= recog.recognize_sphinx(audio)
         label.set_text(reconocio)
 
 header=hdy.HeaderBar(show_close_button=True)
 button=Gtk.Button(label="Escucha")
-button.connect("clicked",activa_reconocimiento)
+button.connect("clicked",click_btn_reconocimiento)
 label= Gtk.Label("Active el reconocimiento")
 imagen=Gtk.Image()
 imagen.set_from_file('./eurus.jpeg')
@@ -64,10 +79,11 @@ header_context.add_class(Gtk.STYLE_CLASS_FLAT)
 
 grid.add(header)
 grid.add(first_row)
-grid.add(imagen)
+# grid.add(imagen)
 
 win.add(grid)
 
 win.show_all()
+festival.speak('Hola, soy Eurus, tu asistente personal')
 Gtk.main()
 
